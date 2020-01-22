@@ -1,7 +1,8 @@
 defmodule Token do
   defstruct [:type, :literal]
 
-  defmacro tokentype do
+  def new(type, literal), do: %Token{type: type, literal: literal}
+  def token_type() do
     %{
       illegal: "illegal",
       eof: "eof",

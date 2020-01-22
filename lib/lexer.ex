@@ -26,7 +26,7 @@ defmodule Lexer do
   end
 
   defp update_lexer(lexer) do
-    if lexer.read_position >= Enum.count(lexer.input) do
+    if lexer.read_position >= String.length(to_string(lexer.input)) do
       lexer
       |> Map.update!(:ch, fn _ch -> nil end)
     else

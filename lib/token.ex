@@ -29,4 +29,22 @@ defmodule Token do
       let: "let",
     }
   end
+
+  def keywords() do
+    %{
+      "fn"  => "function",
+      "let" => "let"
+    }
+  end
+
+  def get_keyword_token_type_if_exist(literal) do
+    keywords = keywords()
+    keyword = Enum.filter(keywords, fn {key, _value} -> key == literal end)
+    if keyword != [] do
+      {_, keyword_token_type} = Enum.at(keyword, 0)
+      {:ok, keyword_token_type}
+    else
+      {:error, :not_found}
+    end
+  end
 end

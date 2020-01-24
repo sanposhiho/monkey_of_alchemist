@@ -26,7 +26,7 @@ defmodule LexerTest do
     end)
   end
 
-  test "test lexer" do
+  test "test lexer2" do
     input =
      'let five = 5;
       let ten = 10;
@@ -90,6 +90,7 @@ defmodule LexerTest do
       %Token{type: Token.token_type.eof,        literal: ""},
     ]
     |> Enum.reduce(lexer, fn %Token{type: type, literal: literal}, acc_lexer ->
+      IO.write "."
       acc_lexer = acc_lexer |> Lexer.read_token()
       assert type == Enum.at(acc_lexer.result, -1).type
       assert literal == Enum.at(acc_lexer.result, -1).literal

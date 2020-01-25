@@ -58,7 +58,12 @@ defmodule Lexer do
   end
 
 
+  defp is_letter?(ch) when is_integer(ch) do
+    (('a'< ch) and (ch < 'z')) or (('A'< ch) and (ch < 'Z')) or (ch == '_')
+  end
+
   defp is_letter?(ch) do
+    ch = [ch]
     (('a'< ch) and (ch < 'z')) or (('A'< ch) and (ch < 'Z')) or (ch == '_')
   end
 

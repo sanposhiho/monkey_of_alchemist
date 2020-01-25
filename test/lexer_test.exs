@@ -13,7 +13,16 @@ defmodule LexerTest do
 
       let result = add(five, ten);
       !-/*5;
-      5 < 10 > 5;'
+      5 < 10 > 5;
+
+      if (5 < 10) {
+        return true;
+      }else{
+        return false;
+      }
+
+      10 == 10;
+      10 != 9;'
 
     lexer = Lexer.new(input)
 
@@ -65,6 +74,31 @@ defmodule LexerTest do
       %Token{type: Token.token_type.int,        literal: "10"},
       %Token{type: Token.token_type.gt,         literal: ">"},
       %Token{type: Token.token_type.int,        literal: "5"},
+      %Token{type: Token.token_type.semicolon,  literal: ";"},
+      %Token{type: Token.token_type.if,         literal: "if"},
+      %Token{type: Token.token_type.lparen,     literal: "("},
+      %Token{type: Token.token_type.int,        literal: "5"},
+      %Token{type: Token.token_type.lt,         literal: "<"},
+      %Token{type: Token.token_type.int,        literal: "10"},
+      %Token{type: Token.token_type.rparen,     literal: ")"},
+      %Token{type: Token.token_type.lbrace,     literal: "{"},
+      %Token{type: Token.token_type.return,     literal: "return"},
+      %Token{type: Token.token_type.true,       literal: "true"},
+      %Token{type: Token.token_type.semicolon,  literal: ";"},
+      %Token{type: Token.token_type.rbrace,     literal: "}"},
+      %Token{type: Token.token_type.else,       literal: "else"},
+      %Token{type: Token.token_type.lbrace,     literal: "{"},
+      %Token{type: Token.token_type.return,     literal: "return"},
+      %Token{type: Token.token_type.false,      literal: "false"},
+      %Token{type: Token.token_type.semicolon,  literal: ";"},
+      %Token{type: Token.token_type.rbrace,     literal: "}"},
+      %Token{type: Token.token_type.int,        literal: "10"},
+      %Token{type: Token.token_type.eq,         literal: "=="},
+      %Token{type: Token.token_type.int,        literal: "10"},
+      %Token{type: Token.token_type.semicolon,  literal: ";"},
+      %Token{type: Token.token_type.int,        literal: "10"},
+      %Token{type: Token.token_type.not_eq,     literal: "!="},
+      %Token{type: Token.token_type.int,        literal: "9"},
       %Token{type: Token.token_type.semicolon,  literal: ";"},
       %Token{type: Token.token_type.eof,        literal: ""},
     ]

@@ -14,6 +14,16 @@ defmodule Token do
       #演算子
       assign: "=",
       plus: "+",
+      minus: "-",
+      bang: "!",
+      asterisk: "*",
+      slash: "/",
+
+      lt: "<",
+      gt: ">",
+
+      eq: "==",
+      not_eq: "!=",
 
       #デリミタ
       comma: ",",
@@ -26,21 +36,24 @@ defmodule Token do
 
       #キーワード
       function: "function",
-      let: "let",
-      minus: "-",
-      bang: "!",
-      asterisk: "*",
-      slash: "/",
-
-      lt: "<",
-      gt: ">",
+      let:      "let",
+      true:     "true",
+      false:    "false",
+      if:       "if",
+      else:     "else",
+      return:   "return",
     }
   end
 
   def keywords() do
     %{
-      "fn"  => "function",
-      "let" => "let"
+      "fn"     => "function",
+      "let"    => "let",
+      "true"   => "true",
+      "false"  => "false",
+      "if"     => "if",
+      "else"   => "else",
+      "return" => "return",
     }
   end
 

@@ -14,6 +14,34 @@ defmodule Lexer do
           |> Map.update!(:result, fn result -> result ++ [new_token] end)
           |> update_lexer()
 
+      {:ambiguous, '='} ->
+        case peek_char(lexer) do
+          {:ok, '='} ->
+              new_token = Token.new(Token.token_type.eq, "==")
+              lexer
+              |> Map.update!(:result, fn result -> result ++ [new_token] end)
+              |> update_lexer(2)
+          _   ->
+              new_token = Token.new(Token.token_type.assign, to_string(lexer.ch))
+              lexer
+              |> Map.update!(:result, fn result -> result ++ [new_token] end)
+              |> update_lexer()
+        end
+
+      {:ambiguous, '!'} ->
+        case peek_char(lexer) do
+          {:ok, '='} ->
+              new_token = Token.new(Token.token_type.not_eq, "!=")
+              lexer
+              |> Map.update!(:result, fn result -> result ++ [new_token] end)
+              |> update_lexer(2)
+          _   ->
+              new_token = Token.new(Token.token_type.bang, to_string(lexer.ch))
+              lexer
+              |> Map.update!(:result, fn result -> result ++ [new_token] end)
+              |> update_lexer()
+        end
+
       {:error, :identifier} ->
           literal = read_identifier(lexer)
           literal_length = String.length(literal)
@@ -29,6 +57,7 @@ defmodule Lexer do
               |> Map.update!(:result, fn result -> result ++ [new_token] end)
               |> update_lexer(literal_length)
           end
+
       {:error, :digit} ->
           literal = read_number(lexer)
           literal_length = String.length(literal)
@@ -48,21 +77,21 @@ defmodule Lexer do
   #"="や";"など、定型のtoken_typeに一致すればTokenを生成して返す
   defp create_if_const_token_type(ch) do
     case ch do
-      '=' -> {:ok, Token.new(Token.token_type.assign,    to_string(ch))}
-      ';' -> {:ok, Token.new(Token.token_type.semicolon, to_string(ch))}
-      '(' -> {:ok, Token.new(Token.token_type.lparen,    to_string(ch))}
-      ')' -> {:ok, Token.new(Token.token_type.rparen,    to_string(ch))}
-      ',' -> {:ok, Token.new(Token.token_type.comma,     to_string(ch))}
-      '+' -> {:ok, Token.new(Token.token_type.plus,      to_string(ch))}
-      '{' -> {:ok, Token.new(Token.token_type.lbrace,    to_string(ch))}
-      '}' -> {:ok, Token.new(Token.token_type.rbrace,    to_string(ch))}
-      '-' -> {:ok, Token.new(Token.token_type.minus,     to_string(ch))}
-      '!' -> {:ok, Token.new(Token.token_type.bang,      to_string(ch))}
-      '*' -> {:ok, Token.new(Token.token_type.asterisk,  to_string(ch))}
-      '/' -> {:ok, Token.new(Token.token_type.slash,     to_string(ch))}
-      '<' -> {:ok, Token.new(Token.token_type.lt,        to_string(ch))}
-      '>' -> {:ok, Token.new(Token.token_type.gt,        to_string(ch))}
-      nil -> {:ok, Token.new(Token.token_type.eof,       "")}
+      '=' -> {:ambiguous, ch}
+      ';' -> {:ok,        Token.new(Token.token_type.semicolon, to_string(ch))}
+      '(' -> {:ok,        Token.new(Token.token_type.lparen,    to_string(ch))}
+      ')' -> {:ok,        Token.new(Token.token_type.rparen,    to_string(ch))}
+      ',' -> {:ok,        Token.new(Token.token_type.comma,     to_string(ch))}
+      '+' -> {:ok,        Token.new(Token.token_type.plus,      to_string(ch))}
+      '{' -> {:ok,        Token.new(Token.token_type.lbrace,    to_string(ch))}
+      '}' -> {:ok,        Token.new(Token.token_type.rbrace,    to_string(ch))}
+      '-' -> {:ok,        Token.new(Token.token_type.minus,     to_string(ch))}
+      '!' -> {:ambiguous, ch}
+      '*' -> {:ok,        Token.new(Token.token_type.asterisk,  to_string(ch))}
+      '/' -> {:ok,        Token.new(Token.token_type.slash,     to_string(ch))}
+      '<' -> {:ok,        Token.new(Token.token_type.lt,        to_string(ch))}
+      '>' -> {:ok,        Token.new(Token.token_type.gt,        to_string(ch))}
+      nil -> {:ok,        Token.new(Token.token_type.eof,       "")}
       ch  ->
         cond do
           is_letter?(ch) -> {:error, :identifier}
@@ -118,6 +147,7 @@ defmodule Lexer do
         |> Map.update!(:read_position, &(&1 + 1))
       end
 
+
     case count do
       1 -> updated_lexer
       c -> update_lexer(updated_lexer, c-1)
@@ -133,16 +163,12 @@ defmodule Lexer do
     end
   end
 
+  def peek_char(lexer) do
+    if lexer.read_position >= String.length(to_string(lexer.input)) do
+      {:error, :last_char}
+    else
+      next_ch = Enum.at(lexer.input, lexer.read_position)
+      {:ok, [next_ch]}
+    end
+  end
 end
-
- #     !-/*5;
- #     5 < 10 > 5;
- #
- #     if (5 < 10) {
- #       return true;
- #     } else {
- #       return false;
- #     }
- #
- #       10 == 10;
- #       10 != 9;

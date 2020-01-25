@@ -27,6 +27,13 @@ defmodule Token do
       #キーワード
       function: "function",
       let: "let",
+      minus: "-",
+      bang: "!",
+      asterisk: "*",
+      slash: "/",
+
+      lt: "<",
+      gt: ">",
     }
   end
 

@@ -8,7 +8,6 @@ defmodule Lexer do
 
   def read_token(lexer) do
     lexer = skip_space(lexer)
-    IO.inspect lexer
     case create_if_const_token_type(lexer.ch) do
       {:ok, new_token} ->
           lexer
@@ -57,6 +56,12 @@ defmodule Lexer do
       '+' -> {:ok, Token.new(Token.token_type.plus,      to_string(ch))}
       '{' -> {:ok, Token.new(Token.token_type.lbrace,    to_string(ch))}
       '}' -> {:ok, Token.new(Token.token_type.rbrace,    to_string(ch))}
+      '-' -> {:ok, Token.new(Token.token_type.minus,     to_string(ch))}
+      '!' -> {:ok, Token.new(Token.token_type.bang,      to_string(ch))}
+      '*' -> {:ok, Token.new(Token.token_type.asterisk,  to_string(ch))}
+      '/' -> {:ok, Token.new(Token.token_type.slash,     to_string(ch))}
+      '<' -> {:ok, Token.new(Token.token_type.lt,        to_string(ch))}
+      '>' -> {:ok, Token.new(Token.token_type.gt,        to_string(ch))}
       nil -> {:ok, Token.new(Token.token_type.eof,       "")}
       ch  ->
         cond do
@@ -102,8 +107,6 @@ defmodule Lexer do
 
   #指定の回数lexerを進める
   defp update_lexer(lexer, count \\ 1) do
-    IO.puts(lexer.read_position)
-    IO.puts(lexer.ch)
     updated_lexer =
       if lexer.read_position >= String.length(to_string(lexer.input)) do
         lexer
@@ -131,3 +134,15 @@ defmodule Lexer do
   end
 
 end
+
+ #     !-/*5;
+ #     5 < 10 > 5;
+ #
+ #     if (5 < 10) {
+ #       return true;
+ #     } else {
+ #       return false;
+ #     }
+ #
+ #       10 == 10;
+ #       10 != 9;

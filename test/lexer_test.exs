@@ -35,18 +35,7 @@ defmodule LexerTest do
         x + y;
       };
 
-      let result = add(five, ten);
-      !-/*5;
-      5 < 10 > 5;
-
-      if (5 < 10) {
-        return true;
-      } else {
-        return false;
-      }
-
-        10 == 10;
-        10 != 9;'
+      let result = add(five, ten);'
 
     lexer = Lexer.new(input)
 
@@ -61,7 +50,7 @@ defmodule LexerTest do
       %Token{type: Token.token_type.assign,     literal: "="},
       %Token{type: Token.token_type.int,        literal: "10"},
       %Token{type: Token.token_type.semicolon,  literal: ";"},
-      %Token{type: Token.token_type.rbrace,     literal: "let"},
+      %Token{type: Token.token_type.let,        literal: "let"},
       %Token{type: Token.token_type.ident,      literal: "add"},
       %Token{type: Token.token_type.assign,     literal: "="},
       %Token{type: Token.token_type.function,   literal: "fn"},
@@ -77,7 +66,7 @@ defmodule LexerTest do
       %Token{type: Token.token_type.semicolon,  literal: ";"},
       %Token{type: Token.token_type.rbrace,     literal: "}"},
       %Token{type: Token.token_type.semicolon,  literal: ";"},
-      %Token{type: Token.token_type.rbrace,     literal: "let"},
+      %Token{type: Token.token_type.let,        literal: "let"},
       %Token{type: Token.token_type.ident,      literal: "result"},
       %Token{type: Token.token_type.assign,     literal: "="},
       %Token{type: Token.token_type.ident,      literal: "add"},
@@ -90,7 +79,6 @@ defmodule LexerTest do
       %Token{type: Token.token_type.eof,        literal: ""},
     ]
     |> Enum.reduce(lexer, fn %Token{type: type, literal: literal}, acc_lexer ->
-      IO.write "."
       acc_lexer = acc_lexer |> Lexer.read_token()
       assert type == Enum.at(acc_lexer.result, -1).type
       assert literal == Enum.at(acc_lexer.result, -1).literal
